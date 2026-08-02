@@ -1,5 +1,5 @@
 let currentStep = 0;
-const totalSteps = 9;
+const totalSteps = 10;
 
 function goStep(n) {
   currentStep = Math.max(0, Math.min(totalSteps - 1, n));
@@ -86,198 +86,47 @@ function buildData() {
 }
 
 function generatePrompt() {
-  const d = buildData();
+  try {
+    const d = buildData();
+    const rawText = document.getElementById('rawCode') ? document.getElementById('rawCode').value : '';
+    const expertContent = expertScriptText || rawText || window.BUILDER_SCRIPT_TEXT;
 
-  // Build review summary
-  const summary = document.getElementById('review-summary');
-  summary.innerHTML = `
-    <dl>
-      <dt>Project</dt>
-      <dd><strong>${d.projectName}</strong> — ${d.projectDescription}</dd>
-      <dt>User</dt>
-      <dd>${d.coreUser}</dd>
-      <dt>Problem</dt>
-      <dd>${d.coreProblem}</dd>
-      <dt>Action</dt>
-      <dd>${d.coreAction}</dd>
-      <dt>Result</dt>
-      <dd>${d.coreResult}</dd>
-      <dt>Platform / Distribution</dt>
-      <dd>${d.platform} / ${d.distribution}</dd>
-      <dt>Design</dt>
-      <dd>${d.designDirection} — ${d.brandName} (${d.brandColorPrimary})</dd>
-      <dt>Constraints</dt>
-      <dd>${d.knownConstraints}</dd>
-    </dl>
-  `;
+    const intakeFormText = `PROJECT INTAKE — FILLED BY BOB, THE BUILDING PRO
+PROJECT_NAME: ${d.projectName || 'N/A'}
+DESCRIPTION: ${d.projectDescription || 'N/A'}
+USER: ${d.coreUser || 'N/A'}
+PROBLEM: ${d.coreProblem || 'N/A'}
+ACTION: ${d.coreAction || 'N/A'}
+RESULT: ${d.coreResult || 'N/A'}
+SOURCE: ${d.sourceMode || 'NEW_PRODUCT'}
+URL: ${d.sourceUrl || 'N/A'}
+PLATFORM: ${d.platform || 'WEB'}
+DISTRIBUTION: ${d.distribution || 'DEPLOYABLE_WEB'}
+FEATURES: ${d.coreFeatures || 'N/A'}
+AUTH: ${d.auth || 'NONE'} | DB: ${d.database || 'NONE'} | AI: ${d.ai || 'NONE'} | PAYMENTS: ${d.payments || 'NONE'}
+SEO: ${d.seo || 'NONE'} | DARK: ${d.darkMode || 'YES'}
+DESIGN: ${d.designDirection || 'N/A'} | BRAND: ${d.brandName || 'N/A'}
+COLORS: ${d.brandColorPrimary || '#f97316'}
+CONSTRAINTS: ${d.knownConstraints || 'none'}
+AUTONOMY: ${d.autonomy || 'AUTONOMOUS'}`;
 
-  // Assemble final prompt text
-  const intakeFormText = `PROJECT INTAKE — FILLED BY BOB, THE BUILDING PRO
+    const fullPrompt = intakeFormText + '\n\n=== BUILDER SCRIPT / EXPERT CODE ===\n\n' + expertContent + '\n\n=== DISCLAIMER ===\n© DelQuro Labs, LLC — Entertainment only. No warranty. Verify independently.';
 
-PROJECT_NAME: ${d.projectName}
-PROJECT_DESCRIPTION: ${d.projectDescription}
-CORE_USER: ${d.coreUser}
-CORE_PROBLEM: ${d.coreProblem}
-CORE_ACTION: ${d.coreAction}
-CORE_RESULT: ${d.coreResult}
-SOURCE_MODE: ${d.sourceMode}
-SOURCE_URL: ${d.sourceUrl}
-PLATFORM: ${d.platform}
-DISTRIBUTION: ${d.distribution}
-CORE_FEATURES:
-${d.coreFeatures}
-AUTH: ${d.auth}  DATABASE: ${d.database}  AI: ${d.ai}  PAYMENTS: ${d.payments}
-SEO: ${d.seo}  DARK_MODE: ${d.darkMode}
-DESIGN_DIRECTION: ${d.designDirection}
-BRAND_NAME: ${d.brandName}
-BRAND_COLORS: Primary: ${d.brandColorPrimary}
-KNOWNS_CONSTRAINTS: ${d.knownConstraints}
-AUTONOMY: ${d.autonomy}`;
-
-  const fullPrompt = intakeFormText + '\n\n---\n\n' + window.BUILDER_SCRIPT_TEXT + '\n\n---\n\n' +
-    'ACKNOWLEDGEMENT & DISCLAIMER — © DelQuro Labs, LLC\n' +
-    'This output is for entertainment purposes only.\n' +
-    'Not legal advice. Not guaranteed for production use.\n' +
-    'Verify all code, licenses, and permissions independently.\n' +
-    'No warranty, expressed or implied, including fitness for a particular purpose.\n' +
-    'Use at your own risk. Consult qualified professionals before commercial deployment.\n';
-
-  const out = document.getElementById('output-area');
-  out.style.display = 'block';
-
-
-  // Button row (bottom bar): Copy Prompt Code | Debug Prompt Code | Run Legal Scan
-  let btnRow = document.getElementById('btn-row');
-  if (!btnRow) {
-    btnRow = document.createElement('div');
-    btnRow.id = 'btn-row';
-    btnRow.style.cssText = 'display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap;';
-    out.parentNode.insertBefore(btnRow, out.nextSibling);
-  }
-
-  // Scroll to bottom button — centered just above bottom bar
-  let scrollRow = document.getElementById('scroll-row');
-  if (!scrollRow) {
-    scrollRow = document.createElement('div');
-    scrollRow.id = 'scroll-row';
-    scrollRow.style.cssText = 'display:flex;justify-content:center;margin-top:8px;';
-    out.parentNode.insertBefore(scrollRow, btnRow);
-  }
-  let scrollBtn = document.getElementById('scroll-btn');
-  if (!scrollBtn) {
-    scrollBtn = document.createElement('button');
-    scrollBtn.id = 'scroll-btn';
-    scrollBtn.textContent = '↓ Scroll to bottom';
-    scrollBtn.style.cssText = 'padding:8px 16px;background:#334155;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;';
-    scrollBtn.onclick = function() {
-      out.scrollTop = out.scrollHeight;
-    };
-    scrollRow.appendChild(scrollBtn);
-  }
-
-  // Copy Prompt Code
-  let copyBtn = document.getElementById('copy-btn');
-  if (!copyBtn) {
-    copyBtn = document.createElement('button');
-    copyBtn.id = 'copy-btn';
-    copyBtn.textContent = '📋 Copy Prompt Code';
-    copyBtn.style.cssText = 'padding:10px 18px;background:#f97316;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;';
-    copyBtn.onclick = function() {
-      const ta = document.createElement('textarea');
-      ta.value = out.textContent;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      copyBtn.textContent = '✓ Copied!';
-      setTimeout(() => copyBtn.textContent = '📋 Copy Prompt Code', 2000);
-    };
-    btnRow.appendChild(copyBtn);
-  }
-
-  // Debug Prompt Code
-  let debugBtn = document.getElementById('debug-btn');
-  if (!debugBtn) {
-    debugBtn = document.createElement('button');
-    debugBtn.id = 'debug-btn';
-    debugBtn.textContent = 'Debug Prompt Code';
-    debugBtn.style.cssText = 'padding:10px 18px;background:#334155;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.9rem;margin:0 auto;flex:1 1 auto;text-align:center;';
-    debugBtn.onclick = function() {
-      const issues = [];
-      const promptText = out.textContent || '';
-      if (promptText.length < 50) issues.push('Prompt too short');
-      if (!promptText.includes('PROJECT_INTAKE')) issues.push('Missing intake header');
-      if (!promptText.includes('VERIFIED FULL-APP BUILDER')) issues.push('Missing builder script');
-      const logText = (issues.length > 0 ? 'DEBUG ISSUES FOUND:\n- ' + issues.join('\n- ') : 'DEBUG PASS: No syntax or structure issues detected in output.') + '\nLength: ' + promptText.length + ' chars\nContains intake: ' + promptText.includes('PROJECT_INTAKE') + '\nContains script: ' + promptText.includes('VERIFIED FULL-APP BUILDER');
-      let logBox = document.getElementById('debug-log-box');
-      if (!logBox) {
-        logBox = document.createElement('div');
-        logBox.id = 'debug-log-box';
-        logBox.style.cssText = 'margin-top:12px;padding:14px;background:#0b1220;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-family:ui-monospace,monospace;font-size:.8rem;white-space:pre-wrap;line-height:1.5;';
-        out.parentNode.insertBefore(logBox, btnRow ? btnRow.nextSibling : out.nextSibling);
-      }
-      logBox.textContent = logText;
-      logBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    };
-    btnRow.appendChild(debugBtn);
-  }
-
-  let scanBtn = document.getElementById('scan-btn');
-  if (!scanBtn) {
-    scanBtn = document.createElement('button');
-    scanBtn.id = 'scan-btn';
-    scanBtn.textContent = '⚖️ Run Legal Scan';
-    scanBtn.style.cssText = 'padding:10px 18px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.9rem;margin-left:auto;';
-    scanBtn.onclick = function() {
-      runLegalScan(buildData());
-    };
-    btnRow.appendChild(scanBtn);
-  }
-
-  out.textContent = fullPrompt;
-  out.select();
-
-  // Copy: try modern API first, then execCommand fallback
-  let msg = document.getElementById('copy-msg');
-  if (!msg) {
-    msg = document.createElement('p');
-    msg.id = 'copy-msg';
-    msg.style.cssText = 'margin-top:8px;font-weight:700;';
-    out.parentNode.insertBefore(msg, out.nextSibling);
-  }
-
-  function doCopy() {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(fullPrompt).then(() => {
-        msg.style.color = '#34d399';
-        msg.textContent = '✓ Copied to clipboard!';
-      }).catch(fallbackCopy);
-    } else {
-      fallbackCopy();
+    let out = document.getElementById('output-area');
+    if (!out) {
+      out = document.createElement('div');
+      out.id = 'output-area';
+      out.className = 'output-box';
+      out.style.display = 'block';
+      document.getElementById('block-8').appendChild(out);
     }
+    out.textContent = fullPrompt;
+    out.style.display = 'block';
+    out.scrollIntoView({behavior:'smooth', block:'nearest'});
+  } catch (e) {
+    alert('Generate completed with errors. Check console. Error: ' + e.message);
+    console.error('GeneratePrompt error:', e);
   }
-
-  function fallbackCopy() {
-    const ta = document.createElement('textarea');
-    ta.value = fullPrompt;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      msg.style.color = '#34d399';
-      msg.textContent = '✓ Copied! (manual select + Ctrl+C also works)';
-    } catch (e) {
-      msg.style.color = '#fbbf24';
-      msg.textContent = '✓ Select the box above and press Ctrl+C / Cmd+C';
-    }
-    document.body.removeChild(ta);
-  }
-
-  doCopy();
 }
 
 function downloadPrompt() {
@@ -422,6 +271,19 @@ function setColorMode(mode) {
 function toggleSidebar() {
   const menu = document.getElementById('side-menu');
   menu.classList.toggle('open');
+}
+
+let expertScriptText = '';
+
+function loadExpertFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    expertScriptText = e.target.result || '';
+    document.getElementById('expert-file-status').textContent = '✓ Loaded: ' + file.name + ' (' + expertScriptText.length + ' chars)';
+  };
+  reader.readAsText(file);
 }
 
 function setHelpMode(mode) {
