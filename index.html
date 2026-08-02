@@ -21,9 +21,10 @@
         <section class="block" id="block-0" data-step="0">
           <h2>Welcome — How much guidance do you want?</h2>
           <p style="color:var(--text-secondary);">Pick the mode that fits you. You can change your mind anytime.</p>
-          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
-            <button type="button" onclick="setHelpMode('got-this');nextStep();" style="padding:12px 20px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;">✅ I got this — brief hints</button>
-            <button type="button" onclick="setHelpMode('need-help');nextStep();" style="padding:12px 20px;background:#f97316;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;">🤝 I could use some help — expanded guidance</button>
+          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;justify-content:center;">
+            <button type="button" onclick="setHelpMode('got-this');nextStep();" style="padding:12px 20px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;font-weight:600;cursor:pointer;">✅ I got this — brief hints</button>
+            <button type="button" onclick="setHelpMode('need-help');nextStep();" style="padding:12px 20px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;font-weight:600;cursor:pointer;">🤝 I could use some help — expanded guidance</button>
+            <button type="button" onclick="goStep(9);" style="padding:12px 20px;background:var(--surface);border:1px solid #fb923c;color:#fb923c;border-radius:8px;font-weight:600;cursor:pointer;">🔴 Expert Mode — raw code</button>
           </div>
           <p id="help-mode-note" style="margin-top:12px;font-size:.85rem;color:var(--text-secondary);">Brief hints shown. Click any label for more details.</p>
         </section>
@@ -200,6 +201,19 @@
           </div>
         </section>
 
+        <!-- Expert Mode -->
+        <section class="block" id="block-9" data-step="9" style="display:none">
+          <h2>Expert Mode — Raw Code & File Upload</h2>
+          <label>Paste or edit raw code</label>
+          <textarea id="rawCode" rows="8" placeholder="Paste your script chunk or full code here for evaluation..." style="font-family:monospace;font-size:.85rem;"></textarea>
+          <div style="margin-top:10px;">
+            <label>Attach file for evaluation</label>
+            <input type="file" id="eval-file" accept=".txt,.js,.md" onchange="loadExpertFile(this)" style="color:var(--text-secondary);font-size:.9rem;" />
+            <p id="expert-file-status" style="margin-top:6px;font-size:.78rem;color:#10b981;min-height:1.2rem;"></p>
+          </div>
+          <button type="button" id="eval-btn" onclick="loadExpertFile(document.getElementById('eval-file')); goStep(8);" class="cta-btn" style="margin-top:16px;">🔨 Evaluate & Generate</button>
+        </section>
+
         <!-- Review -->
         <section class="block" id="block-8" data-step="8" style="display:none">
           <h2>Block 8 — Review & Generate</h2>
@@ -226,6 +240,6 @@
 
   <script src="builder-script.js"></script>
   <script src="app.js"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a24ee071cde727e8',t:'MTc4NTY5MjUyMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a25030832f4db16c',t:'MTc4NTcwNjI4Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+</body>
 </html>
