@@ -40,19 +40,19 @@
 
           <label>Core User <span class="hint">One specific person</span></label>
           <input type="text" id="coreUser" placeholder="Freelance graphic designers..." required />
-          <div class="extra-help"><strong>What this means:</strong> Don't say "everyone." Pick one real type of person: "Freelance writers who invoice 10 clients a month." The more specific, the better the result.</div>
+          <div class="extra-help"><strong>What this means:</strong> Don't say "everyone." Pick one real type of person: "Freelance writers managing 10 clients a month." The more specific, the better the result.</div>
 
           <label>Core Problem <span class="hint">Specific pain and its cost</span></label>
           <textarea id="coreProblem" rows="3" required></textarea>
-          <div class="extra-help"><strong>What this means:</strong> What hurts right now? Include time lost, money lost, or frustration. Example: "Writers spend 2 hours formatting invoices and miss line items."</div>
+          <div class="extra-help"><strong>What this means:</strong> What hurts right now? Include time lost, money lost, or frustration. Example: "Builders spend 2 hours setting up apps manually and miss key features."</div>
 
           <label>Core Action <span class="hint">Single primary action</span></label>
           <input type="text" id="coreAction" placeholder="Generate a formatted invoice..." required />
-          <div class="extra-help"><strong>What this means:</strong> The one most important thing your user does. One verb. Not a list. Example: "Generate a formatted invoice from a client name and job list."</div>
+          <div class="extra-help"><strong>What this means:</strong> The one most important thing your user does. One verb. Not a list. Example: "Generate an app from a feature list and design notes."</div>
 
           <label>Core Result <span class="hint">Concrete output</span></label>
           <textarea id="coreResult" rows="3" required></textarea>
-          <div class="extra-help"><strong>What this means:</strong> After the action finishes, what does the user have? Be concrete: file type, format, download. Example: "A PDF-ready invoice with itemized costs, totals, and due date."</div>
+          <div class="extra-help"><strong>What this means:</strong> After the action finishes, what does the user have? Be concrete: file type, format, download. Example: "A deployable web app with all selected modules and design applied."</div>
         </section>
 
         <!-- Block 2 -->
@@ -101,7 +101,7 @@
           <h2>Block 4 — Core Features</h2>
           <label>List features (one per line)</label>
           <textarea id="coreFeatures" rows="5" placeholder="- User pastes URL and receives summary..." required></textarea>
-          <div class="extra-help"><strong>What this means:</strong> List only must-have features. Be specific and testable. Good: "User pastes URL → receives summary." Bad: "Good UX." Keep it focused.</div>
+          <div class="extra-help"><strong>What this means:</strong> List only must-have features for your app. Be specific and testable. Good example for an app: "User signs up → creates a project → exports a file." Bad: "Good UX." Focus on the core user action and result you described in Block 1.</div>
         </section>
 
         <!-- Block 5 -->
@@ -138,7 +138,7 @@
           </div>
 
           <label>SEO</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = skip SEO (good for private/local apps). BASIC = basic metadata and sitemap. FULL = full SEO with comparison pages and structured data. Only use FULL for public marketing websites.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> SEO helps people find your app on search engines. NONE = skip SEO (good for private/local apps or internal tools). BASIC = basic metadata and sitemap so search engines can index you. FULL = full SEO with comparison pages, structured data, and optimized content. If this app will be public, FULL helps users discover it.</div>
           <div class="radio-group">
             <label><input type="radio" name="seo" value="NONE" /> None</label>
             <label><input type="radio" name="seo" value="BASIC" /> Basic</label>
@@ -161,7 +161,7 @@
           <textarea id="designDirection" rows="2" placeholder="Clean and minimal. Lots of whitespace..." required></textarea>
 
           <label>Brand Name</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> The name users see in the app. It can be different from the project name. Example: project name "invoice-wizard" but brand name "InvoiceWiz".</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> The name users see in the app. It can be different from the project name. Example: project name "app-builder" but brand name "AppWiz".</div>
           <input type="text" id="brandName" placeholder="RecipeAI" required />
 
           <label>Primary Color <span class="hint">Your main brand color</span></label>
@@ -189,7 +189,7 @@
         <section class="block" id="block-7" data-step="7" style="display:none">
           <h2>Block 7 — Constraints and Agent Behavior</h2>
           <label>Known Constraints <span class="hint">Budget, APIs, infrastructure, or "none"</span></label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> Anything that limits your choices: existing accounts (Supabase, Vercel), budget limits, required payment providers, performance targets. Example: "Must use Supabase — I already have a project." If nothing applies, write "none."</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> List anything that limits your build: accounts you already have (Supabase, Vercel), budget limits, required APIs, performance targets, or technology preferences. If you don't know what applies, write "unsure — please advise" and the AI will help you decide. Example: "I already use Vercel and want to deploy there."</div>
           <textarea id="knownConstraints" rows="3" placeholder="Must use Supabase..." required></textarea>
 
           <label>Agent Autonomy</label>
@@ -227,5 +227,5 @@
   <script src="builder-script.js"></script>
   <script src="app.js"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a24e9f990dea27e8',t:'MTc4NTY4OTg2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a24eda03aac627e8',t:'MTc4NTY5MjI1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

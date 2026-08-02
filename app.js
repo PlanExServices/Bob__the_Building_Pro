@@ -224,7 +224,6 @@ AUTONOMY: ${d.autonomy}`;
     btnRow.appendChild(debugBtn);
   }
 
-  // Run Legal Scan
   let scanBtn = document.getElementById('scan-btn');
   if (!scanBtn) {
     scanBtn = document.createElement('button');

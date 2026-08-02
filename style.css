@@ -152,7 +152,7 @@ input[type="text"]:focus, textarea:focus, select:focus {
 textarea { resize: vertical; min-height: 80px; }
 
 /* Radios */
-.radio-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.radio-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; justify-content: center; }
 .radio-group label {
   display: flex; align-items: center; gap: 8px;
   background: rgba(255,255,255,0.03);
@@ -165,14 +165,14 @@ textarea { resize: vertical; min-height: 80px; }
 .radio-group input[type="radio"] { accent-color: #fb923c; width: 18px; height: 18px; }
 
 /* Footer wizard buttons */
-.wizard-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 28px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); }
+.wizard-footer { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 28px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
 #btn-prev, #btn-next { padding: 12px 22px; border-radius: 10px; font-weight: 700; cursor: pointer; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: var(--text); transition: all .15s ease; }
 #btn-next { background: linear-gradient(135deg, #fb923c, #f97316); border-color: transparent; color: #fff; box-shadow: 0 6px 18px rgba(249,115,22,0.3); }
 #btn-prev:disabled { opacity: .3; cursor: not-allowed; }
 #step-counter { color: var(--text-secondary); font-size: .85rem; font-variant-numeric: tabular-nums; }
 
 /* Output */
-.output-box {
+ .output-box { margin-left: auto; margin-right: auto;
   background: #070b14; border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius); padding: 18px; margin-top: 18px;
   overflow-y: auto; max-height: 360px; white-space: pre-wrap;
@@ -193,6 +193,7 @@ textarea { resize: vertical; min-height: 80px; }
 .site-footer strong { color: #fb923c; }
 
 /* Extra help */
+.expanded-help .extra-help { display: block !important; }
 .expanded-help .hint { display: block; color: var(--text-secondary); font-size: .85rem; margin-top: 8px; line-height: 1.55; }
 .expanded-help label { font-size: 1.05rem; margin-bottom: 8px; }
 .extra-help {
@@ -204,7 +205,7 @@ textarea { resize: vertical; min-height: 80px; }
 .active-mode { box-shadow: 0 0 0 3px var(--primary-glow) !important; border-color: #fb923c !important; background: linear-gradient(135deg, #fb923c, #f97316) !important; color: #fff !important; }
 
 /* Button row */
-#btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+#btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; justify-content: center; }
 #btn-row button { font-family: inherit; }
 
 /* Scroll row */
