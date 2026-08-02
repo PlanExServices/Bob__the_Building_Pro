@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bob, the Building Pro</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <h1>🔨 Bob, the Building Pro</h1>
+      <p>Answer guided questions and generate your complete AI builder prompt.</p>
+
+    </header>
+
+    <main id="wizard" class="wizard">
+
+      <form id="builder-form" novalidate onsubmit="event.preventDefault(); nextStep();">
+        <!-- Help Mode -->
+        <section class="block" id="block-0" data-step="0">
+          <h2>Welcome — How much guidance do you want?</h2>
+          <p style="color:var(--text-secondary);">Pick the mode that fits you. You can change your mind anytime.</p>
+          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
+            <button type="button" onclick="setHelpMode('got-this');nextStep();" style="padding:12px 20px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;">✅ I got this — brief hints</button>
+            <button type="button" onclick="setHelpMode('need-help');nextStep();" style="padding:12px 20px;background:#f97316;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;">🤝 I could use some help — expanded guidance</button>
+          </div>
+          <p id="help-mode-note" style="margin-top:12px;font-size:.85rem;color:var(--text-secondary);">Brief hints shown. Click any label for more details.</p>
+        </section>
+
+        <!-- Block 1 -->
+        <section class="block" id="block-1" data-step="1" style="display:none">
+          <h2>Block 1 — Core Product Identity</h2>
+          <label>Project Name <span class="hint">URL-friendly, lowercase, hyphens only</span></label>
+          <input type="text" id="projectName" placeholder="recipe-ai" required />
+
+          <label>Project Description <span class="hint">1–3 sentences</span></label>
+          <textarea id="projectDescription" rows="3" placeholder="A web app that lets..." required></textarea>
+          <div class="extra-help"><strong>What this means:</strong> Describe what your app does and who uses it. Example: "A web app for teachers to create quizzes from notes in under 30 seconds." Keep it to 1-3 short sentences.</div>
+
+          <label>Core User <span class="hint">One specific person</span></label>
+          <input type="text" id="coreUser" placeholder="Freelance graphic designers..." required />
+          <div class="extra-help"><strong>What this means:</strong> Don't say "everyone." Pick one real type of person: "Freelance writers who invoice 10 clients a month." The more specific, the better the result.</div>
+
+          <label>Core Problem <span class="hint">Specific pain and its cost</span></label>
+          <textarea id="coreProblem" rows="3" required></textarea>
+          <div class="extra-help"><strong>What this means:</strong> What hurts right now? Include time lost, money lost, or frustration. Example: "Writers spend 2 hours formatting invoices and miss line items."</div>
+
+          <label>Core Action <span class="hint">Single primary action</span></label>
+          <input type="text" id="coreAction" placeholder="Generate a formatted invoice..." required />
+          <div class="extra-help"><strong>What this means:</strong> The one most important thing your user does. One verb. Not a list. Example: "Generate a formatted invoice from a client name and job list."</div>
+
+          <label>Core Result <span class="hint">Concrete output</span></label>
+          <textarea id="coreResult" rows="3" required></textarea>
+          <div class="extra-help"><strong>What this means:</strong> After the action finishes, what does the user have? Be concrete: file type, format, download. Example: "A PDF-ready invoice with itemized costs, totals, and due date."</div>
+        </section>
+
+        <!-- Block 2 -->
+        <section class="block" id="block-2" data-step="2" style="display:none">
+          <h2>Block 2 — Source and Legal</h2>
+          <label>Source Mode</label>
+          <div class="extra-help" style="margin-bottom:8px;"><strong>What this means:</strong> NEW_PRODUCT = original. AUTHORIZED_REBUILD = you own it or have written permission. PUBLIC_INSPIRATION = you admire public features and will rebuild independently. Most choose NEW_PRODUCT.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="sourceMode" value="NEW_PRODUCT" checked /> New Product</label>
+            <label><input type="radio" name="sourceMode" value="AUTHORIZED_REBUILD" /> Authorized Rebuild</label>
+            <label><input type="radio" name="sourceMode" value="PUBLIC_PRODUCT_INSPIRATION" /> Public Inspiration</label>
+          </div>
+
+          <label>Source URL <span class="hint">N/A for NEW_PRODUCT</span></label>
+          <input type="text" id="sourceUrl" placeholder="https://... or N/A" />
+
+          <label>Authorization Confirmation <span class="hint">Only for AUTHORIZED_REBUILD</span></label>
+          <textarea id="authConfirm" rows="2" placeholder="I confirm I own... or N/A"></textarea>
+          <div class="extra-help"><strong>What this means:</strong> Only needed if you selected AUTHORIZED_REBUILD. Type exactly: "I confirm I own this product and have full rights to rebuild it." Or "I confirm I have written permission from [name]." Otherwise write N/A.</div>
+        </section>
+
+        <!-- Block 3 -->
+        <section class="block" id="block-3" data-step="3" style="display:none">
+          <h2>Block 3 — Platform and Distribution</h2>
+          <label>Platform</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> WEB = browser app (recommended for most). MOBILE = native app. WEB_AND_MOBILE = both. DESKTOP = desktop program. If unsure, pick WEB.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="platform" value="WEB" checked /> Web</label>
+            <label><input type="radio" name="platform" value="MOBILE" /> Mobile</label>
+            <label><input type="radio" name="platform" value="WEB_AND_MOBILE" /> Web + Mobile</label>
+            <label><input type="radio" name="platform" value="DESKTOP" /> Desktop</label>
+          </div>
+
+          <label>Distribution</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> LOCAL_ONLY = runs only on your computer. DEPLOYABLE_WEB = lives online. APP_STORES = Apple/Google stores. BOTH = local and online. Most start with DEPLOYABLE_WEB.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="distribution" value="LOCAL_ONLY" /> Local Only</label>
+            <label><input type="radio" name="distribution" value="DEPLOYABLE_WEB" checked /> Deployable Web</label>
+            <label><input type="radio" name="distribution" value="APP_STORES" /> App Stores</label>
+            <label><input type="radio" name="distribution" value="BOTH_LOCAL_AND_DEPLOYABLE" /> Both</label>
+          </div>
+        </section>
+
+        <!-- Block 4 -->
+        <section class="block" id="block-4" data-step="4" style="display:none">
+          <h2>Block 4 — Core Features</h2>
+          <label>List features (one per line)</label>
+          <textarea id="coreFeatures" rows="5" placeholder="- User pastes URL and receives summary..." required></textarea>
+          <div class="extra-help"><strong>What this means:</strong> List only must-have features. Be specific and testable. Good: "User pastes URL → receives summary." Bad: "Good UX." Keep it focused.</div>
+        </section>
+
+        <!-- Block 5 -->
+        <section class="block" id="block-5" data-step="5" style="display:none">
+          <h2>Block 5 — Optional Modules</h2>
+          <label>Auth</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = anyone can use it with no login. REQUIRED = users must sign in. Only choose REQUIRED if you need private data saved across devices or paid accounts.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="auth" value="NONE" checked /> None</label>
+            <label><input type="radio" name="auth" value="REQUIRED" /> Required</label>
+          </div>
+
+          <label>Database</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = no database (uses local storage). LOCAL = file database on your computer. CLOUD = online database like Supabase. AUTO = agent picks. Most simple apps use NONE.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="database" value="NONE" checked /> None</label>
+            <label><input type="radio" name="database" value="LOCAL" /> Local</label>
+            <label><input type="radio" name="database" value="CLOUD" /> Cloud</label>
+            <label><input type="radio" name="database" value="AUTO" /> Auto</label>
+          </div>
+
+          <label>AI / LLM</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = no AI features. REQUIRED = your app uses an AI provider like OpenAI or Anthropic. Only choose REQUIRED if your core feature needs AI to work.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="ai" value="NONE" checked /> None</label>
+            <label><input type="radio" name="ai" value="REQUIRED" /> Required</label>
+          </div>
+
+          <label>Payments</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = free app. REQUIRED = users pay (subscription, one-time, etc.). Only choose REQUIRED if you are ready to handle billing now.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="payments" value="NONE" checked /> None</label>
+            <label><input type="radio" name="payments" value="REQUIRED" /> Required</label>
+          </div>
+
+          <label>SEO</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = skip SEO (good for private/local apps). BASIC = basic metadata and sitemap. FULL = full SEO with comparison pages and structured data. Only use FULL for public marketing websites.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="seo" value="NONE" /> None</label>
+            <label><input type="radio" name="seo" value="BASIC" /> Basic</label>
+            <label><input type="radio" name="seo" value="FULL" checked /> Full</label>
+          </div>
+
+          <label>Dark Mode</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> YES = users can switch between light and dark themes. This is recommended for most consumer apps. NO = only one color theme.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="darkMode" value="YES" checked /> Yes</label>
+            <label><input type="radio" name="darkMode" value="NO" /> No</label>
+          </div>
+        </section>
+
+        <!-- Block 6 -->
+        <section class="block" id="block-6" data-step="6" style="display:none">
+          <h2>Block 6 — Design and Brand</h2>
+          <label>Design Direction <span class="hint">Mood, references, feeling</span></label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> Describe the visual mood in plain words. Reference real products you like. Example: "Clean and minimal like Notion." This guides the agent's design choices.</div>
+          <textarea id="designDirection" rows="2" placeholder="Clean and minimal. Lots of whitespace..." required></textarea>
+
+          <label>Brand Name</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> The name users see in the app. It can be different from the project name. Example: project name "invoice-wizard" but brand name "InvoiceWiz".</div>
+          <input type="text" id="brandName" placeholder="RecipeAI" required />
+
+          <label>Primary Color <span class="hint">Your main brand color</span></label>
+          <div style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+            <button type="button" onclick="setColorMode('agent')" id="btn-agent" style="padding:8px 14px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;">🤖 Agent decides</button>
+            <button type="button" onclick="setColorMode('pick')" id="btn-pick" style="padding:8px 14px;background:#334155;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;">🎨 I'll pick</button>
+          </div>
+          <div id="color-row" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span style="font-size:.8rem;color:var(--text-secondary);">Main:</span>
+              <input type="color" id="primaryColorPicker" value="#f97316" style="width:36px;height:36px;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;" />
+              <input type="text" id="brandColorPrimary" value="#f97316" placeholder="#4f46e5" style="flex:1;min-width:120px;" />
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span style="font-size:.8rem;color:var(--text-secondary);">Secondary:</span>
+              <input type="color" id="secondaryColorPicker" value="#fb923c" style="width:36px;height:36px;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;" />
+              <input type="text" id="brandColorSecondary" value="#fb923c" placeholder="#fb923c" style="flex:1;min-width:120px;" />
+              <label style="font-size:.78rem;color:var(--text-secondary);"><input type="checkbox" id="noSecondary" /> No secondary</label>
+            </div>
+          </div>
+          <div class="extra-help"><strong>What this means:</strong> Your main brand color. Click "Random" for an automatic choice, "Agent decides" to let the agent pick, or "I'll pick" to choose with the color picker.</div>
+        </section>
+
+        <!-- Block 7 -->
+        <section class="block" id="block-7" data-step="7" style="display:none">
+          <h2>Block 7 — Constraints and Agent Behavior</h2>
+          <label>Known Constraints <span class="hint">Budget, APIs, infrastructure, or "none"</span></label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> Anything that limits your choices: existing accounts (Supabase, Vercel), budget limits, required payment providers, performance targets. Example: "Must use Supabase — I already have a project." If nothing applies, write "none."</div>
+          <textarea id="knownConstraints" rows="3" placeholder="Must use Supabase..." required></textarea>
+
+          <label>Agent Autonomy</label>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> AUTONOMOUS = agent makes all decisions quickly and records them. CHECKPOINTS = agent pauses for your approval at key stages (spec, core build, final QA). Choose CHECKPOINTS if you want control; AUTONOMOUS for speed.</div>
+          <div class="radio-group">
+            <label><input type="radio" name="autonomy" value="AUTONOMOUS" checked /> Autonomous</label>
+            <label><input type="radio" name="autonomy" value="CHECKPOINTS" /> Checkpoints</label>
+          </div>
+        </section>
+
+        <!-- Review -->
+        <section class="block" id="block-8" data-step="8" style="display:none">
+          <h2>Block 8 — Review & Generate</h2>
+          <div id="review-summary"></div>
+          <div class="actions">
+            <button type="button" onclick="generatePrompt()" class="cta-btn">🔨 Generate Builder Prompt</button>
+          </div>
+          <div id="output-area" class="output-box" style="display:none;"></div>
+        </section>
+
+        <div class="wizard-footer">
+          <button type="button" onclick="prevStep()" id="btn-prev" disabled>← Back</button>
+          <span id="step-counter">Step 1 of 8</span>
+          <button type="submit" id="btn-next">Next →</button>
+          <button type="button" onclick="currentStep=0; renderStep(); document.getElementById('builder-form').reset();" style="margin-left:auto;padding:8px 14px;background:#334155;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;">↺ Restart</button>
+        </div>
+      </form>
+    </main>
+
+    <footer class="site-footer">
+      <p><strong>© DelQuro Labs, LLC</strong> — For entertainment purposes only. Not legal advice. Not guaranteed for production use. Verify all code, licenses, and permissions independently. No warranty, expressed or implied, including fitness for a particular purpose. Use at your own risk.</p>
+    </footer>
+  </div>
+
+  <script src="builder-script.js"></script>
+  <script src="app.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a24e9f990dea27e8',t:'MTc4NTY4OTg2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
