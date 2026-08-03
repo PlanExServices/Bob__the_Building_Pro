@@ -9,29 +9,125 @@
 <body>
   <div class="app">
     <header class="hero">
-      <h1>🔨 Bob, the Building Pro</h1>
-      <p>Answer guided questions and generate your complete AI builder prompt.</p>
-
+      <div class="hero-badge">AI App Builder</div>
+      <h1>Bob, the Building Pro</h1>
+      <p class="hero-tagline">Describe your app idea. Get a complete builder prompt for your AI agent.</p>
     </header>
 
-    <main id="wizard" class="wizard">
+    <!-- Global Progress Bar -->
+    <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Wizard progress">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
 
-      <form id="builder-form" novalidate onsubmit="event.preventDefault(); nextStep();">
-        <!-- Help Mode -->
+    <!-- Step Indicator Pills -->
+    <nav class="step-pills" id="step-pills" aria-label="Wizard steps">
+      <button type="button" class="step-pill" data-goto="0" aria-label="Welcome">Welcome</button>
+      <button type="button" class="step-pill" data-goto="1" aria-label="Core Identity">Identity</button>
+      <button type="button" class="step-pill" data-goto="2" aria-label="Source & Legal">Source</button>
+      <button type="button" class="step-pill" data-goto="3" aria-label="Platform">Platform</button>
+      <button type="button" class="step-pill" data-goto="4" aria-label="Features">Features</button>
+      <button type="button" class="step-pill" data-goto="5" aria-label="Modules">Modules</button>
+      <button type="button" class="step-pill" data-goto="6" aria-label="Design">Design</button>
+      <button type="button" class="step-pill" data-goto="7" aria-label="Constraints">Constraints</button>
+      <button type="button" class="step-pill" data-goto="8" aria-label="Review">Review</button>
+    </nav>
+
+    <!-- Loading indicator (shown while full-script.txt loads) -->
+    <div id="loading-bar" class="loading-bar" style="display:none;">
+      <div class="loading-bar-fill"></div>
+    </div>
+
+    <main id="wizard" class="wizard" aria-live="polite" aria-atomic="true">
+
+      <form id="builder-form" novalidate>
+
+        <!-- Step 0: Welcome / Mode Selection -->
         <section class="block" id="block-0" data-step="0">
-          <h2>Welcome — How much guidance do you want?</h2>
-          <p style="color:var(--text-secondary);">Pick the mode that fits you. You can change your mind anytime.</p>
-          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;justify-content:center;">
-            <button type="button" onclick="setHelpMode('got-this');nextStep();" style="padding:12px 20px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;font-weight:600;cursor:pointer;">✅ I got this — brief hints</button>
-            <button type="button" onclick="setHelpMode('need-help');nextStep();" style="padding:12px 20px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;font-weight:600;cursor:pointer;">🤝 I could use some help — expanded guidance</button>
-            <button type="button" onclick="goStep(9);" style="padding:12px 20px;background:var(--surface);border:1px solid #fb923c;color:#fb923c;border-radius:8px;font-weight:600;cursor:pointer;">🔴 Expert Mode — raw code</button>
+          <div class="welcome-header">
+            <h2>How would you like to start?</h2>
+            <p class="welcome-description">Choose the path that matches your experience level. You can always switch modes later.</p>
           </div>
-          <p id="help-mode-note" style="margin-top:12px;font-size:.85rem;color:var(--text-secondary);">Brief hints shown. Click any label for more details.</p>
+          
+          <div class="mode-cards">
+            <button type="button" data-action="start-katie" class="mode-card mode-card--primary">
+              <div class="mode-card-icon">🐱</div>
+              <div class="mode-card-content">
+                <h3>Katie's Groove</h3>
+                <p class="mode-card-title">I'm brand new — walk me through it</p>
+                <p class="mode-card-desc">A friendly conversation that guides you step-by-step. No jargon, no pressure.</p>
+              </div>
+              <div class="mode-card-arrow">→</div>
+            </button>
+
+            <button type="button" data-action="set-mode" data-mode="need-help" class="mode-card">
+              <div class="mode-card-icon">🤝</div>
+              <div class="mode-card-content">
+                <h3>Guided Mode</h3>
+                <p class="mode-card-title">I could use some help</p>
+                <p class="mode-card-desc">Standard intake form with expanded guidance and examples for every field.</p>
+              </div>
+              <div class="mode-card-arrow">→</div>
+            </button>
+
+            <button type="button" data-action="set-mode" data-mode="got-this" class="mode-card">
+              <div class="mode-card-icon">✅</div>
+              <div class="mode-card-content">
+                <h3>Quick Mode</h3>
+                <p class="mode-card-title">I got this — brief hints</p>
+                <p class="mode-card-desc">Standard intake form with minimal guidance. For users who know what they're doing.</p>
+              </div>
+              <div class="mode-card-arrow">→</div>
+            </button>
+
+            <button type="button" data-action="go-expert" class="mode-card mode-card--expert">
+              <div class="mode-card-icon">🔴</div>
+              <div class="mode-card-content">
+                <h3>Expert Mode</h3>
+                <p class="mode-card-title">I have code or a spec</p>
+                <p class="mode-card-desc">Paste existing code or upload a file. Bob will analyze it and auto-fill the intake form.</p>
+              </div>
+              <div class="mode-card-arrow">→</div>
+            </button>
+          </div>
         </section>
 
-        <!-- Block 1 -->
-        <section class="block" id="block-1" data-step="1" style="display:none">
+        <!-- Katie's Groove: Beginner Conversational Intake -->
+        <section class="block" id="block-katie" data-step="10" style="display:none">
+          <div class="katie-header">
+            <h2>🐱 Katie's Groove</h2>
+            <p class="katie-subtitle">No jargon. No pressure. Just a conversation. I'll ask you simple questions and build your project intake from your answers.</p>
+            <div class="katie-progress">
+              <div class="katie-progress-fill" id="katie-progress-fill"></div>
+            </div>
+            <p class="katie-step-label" id="katie-step-label">Phase 1 of 11</p>
+          </div>
+
+          <div id="katie-conversation" class="katie-conversation">
+            <!-- Conversation bubbles render here -->
+          </div>
+
+          <div id="katie-input-area" class="katie-input-area">
+            <textarea id="katie-answer" class="katie-answer" rows="3" placeholder="Type your answer here..."></textarea>
+            <div class="katie-input-actions">
+              <button type="button" data-action="katie-skip" class="katie-skip-btn" id="katie-skip-btn">Skip →</button>
+              <button type="button" data-action="katie-submit" class="cta-btn katie-submit-btn" id="katie-submit-btn">Next →</button>
+            </div>
+            <div id="katie-suggestions" class="katie-suggestions"></div>
+          </div>
+
+          <div id="katie-done" class="katie-done" style="display:none">
+            <div class="katie-done-icon">🎉</div>
+            <h3>Your project intake is ready!</h3>
+            <p>I've translated your answers into a structured project intake. You can review everything on the next screen and tweak anything before generating your builder prompt.</p>
+            <div id="katie-summary" class="katie-summary"></div>
+            <button type="button" data-action="katie-finish" class="cta-btn">Review My Project →</button>
+          </div>
+        </section>
+
+        <!-- Step 1: Core Product Identity -->
+        <section class="block" id="block-1" data-step="1">
           <h2>Block 1 — Core Product Identity</h2>
+
           <label>Project Name <span class="hint">URL-friendly, lowercase, hyphens only</span></label>
           <input type="text" id="projectName" placeholder="recipe-ai" required />
 
@@ -56,9 +152,10 @@
           <div class="extra-help"><strong>What this means:</strong> After the action finishes, what does the user have? Be concrete: file type, format, download. Example: "A deployable web app with all selected modules and design applied."</div>
         </section>
 
-        <!-- Block 2 -->
-        <section class="block" id="block-2" data-step="2" style="display:none">
+        <!-- Step 2: Source and Legal -->
+        <section class="block" id="block-2" data-step="2">
           <h2>Block 2 — Source and Legal</h2>
+
           <label>Source Mode</label>
           <div class="extra-help" style="margin-bottom:8px;"><strong>What this means:</strong> NEW_PRODUCT = original. AUTHORIZED_REBUILD = you own it or have written permission. PUBLIC_INSPIRATION = you admire public features and will rebuild independently. Most choose NEW_PRODUCT.</div>
           <div class="radio-group">
@@ -75,9 +172,10 @@
           <div class="extra-help"><strong>What this means:</strong> Only needed if you selected AUTHORIZED_REBUILD. Type exactly: "I confirm I own this product and have full rights to rebuild it." Or "I confirm I have written permission from [name]." Otherwise write N/A.</div>
         </section>
 
-        <!-- Block 3 -->
-        <section class="block" id="block-3" data-step="3" style="display:none">
+        <!-- Step 3: Platform and Distribution -->
+        <section class="block" id="block-3" data-step="3">
           <h2>Block 3 — Platform and Distribution</h2>
+
           <label>Platform</label>
           <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> WEB = browser app (recommended for most). MOBILE = native app. WEB_AND_MOBILE = both. DESKTOP = desktop program. If unsure, pick WEB.</div>
           <div class="radio-group">
@@ -97,26 +195,27 @@
           </div>
         </section>
 
-        <!-- Block 4 -->
-        <section class="block" id="block-4" data-step="4" style="display:none">
+        <!-- Step 4: Core Features -->
+        <section class="block" id="block-4" data-step="4">
           <h2>Block 4 — Core Features</h2>
           <label>List features (one per line)</label>
           <textarea id="coreFeatures" rows="5" placeholder="- User pastes URL and receives summary..." required></textarea>
-          <div class="extra-help"><strong>What this means:</strong> List only must-have features for your app. Be specific and testable. Good example for an app: "User signs up → creates a project → exports a file." Bad: "Good UX." Focus on the core user action and result you described in Block 1.</div>
+          <div class="extra-help"><strong>What this means:</strong> List only must-have features for your app. Be specific and testable. Good example: "User signs up → creates a project → exports a file." Bad: "Good UX."</div>
         </section>
 
-        <!-- Block 5 -->
-        <section class="block" id="block-5" data-step="5" style="display:none">
+        <!-- Step 5: Optional Modules -->
+        <section class="block" id="block-5" data-step="5">
           <h2>Block 5 — Optional Modules</h2>
+
           <label>Auth</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = anyone can use it with no login. REQUIRED = users must sign in. Only choose REQUIRED if you need private data saved across devices or paid accounts.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = anyone can use it with no login. REQUIRED = users must sign in.</div>
           <div class="radio-group">
             <label><input type="radio" name="auth" value="NONE" checked /> None</label>
             <label><input type="radio" name="auth" value="REQUIRED" /> Required</label>
           </div>
 
           <label>Database</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = no database (uses local storage). LOCAL = file database on your computer. CLOUD = online database like Supabase. AUTO = agent picks. Most simple apps use NONE.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = no database (uses local storage). LOCAL = file database. CLOUD = online database like Supabase. AUTO = agent picks.</div>
           <div class="radio-group">
             <label><input type="radio" name="database" value="NONE" checked /> None</label>
             <label><input type="radio" name="database" value="LOCAL" /> Local</label>
@@ -125,21 +224,21 @@
           </div>
 
           <label>AI / LLM</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = no AI features. REQUIRED = your app uses an AI provider like OpenAI or Anthropic. Only choose REQUIRED if your core feature needs AI to work.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = no AI features. REQUIRED = your app uses an AI provider like OpenAI or Anthropic.</div>
           <div class="radio-group">
             <label><input type="radio" name="ai" value="NONE" checked /> None</label>
             <label><input type="radio" name="ai" value="REQUIRED" /> Required</label>
           </div>
 
           <label>Payments</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = free app. REQUIRED = users pay (subscription, one-time, etc.). Only choose REQUIRED if you are ready to handle billing now.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = free app. REQUIRED = users pay (subscription, one-time, etc.).</div>
           <div class="radio-group">
             <label><input type="radio" name="payments" value="NONE" checked /> None</label>
             <label><input type="radio" name="payments" value="REQUIRED" /> Required</label>
           </div>
 
           <label>SEO</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> SEO helps people find your app on search engines. NONE = skip SEO (good for private/local apps or internal tools). BASIC = basic metadata and sitemap so search engines can index you. FULL = full SEO with comparison pages, structured data, and optimized content. If this app will be public, FULL helps users discover it.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> NONE = skip SEO. BASIC = basic metadata and sitemap. FULL = full SEO with comparison pages and structured data.</div>
           <div class="radio-group">
             <label><input type="radio" name="seo" value="NONE" /> None</label>
             <label><input type="radio" name="seo" value="BASIC" /> Basic</label>
@@ -147,89 +246,107 @@
           </div>
 
           <label>Dark Mode</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> YES = users can switch between light and dark themes. This is recommended for most consumer apps. NO = only one color theme.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> YES = users can switch between light and dark themes. NO = only one color theme.</div>
           <div class="radio-group">
             <label><input type="radio" name="darkMode" value="YES" checked /> Yes</label>
             <label><input type="radio" name="darkMode" value="NO" /> No</label>
           </div>
         </section>
 
-        <!-- Block 6 -->
-        <section class="block" id="block-6" data-step="6" style="display:none">
+        <!-- Step 6: Design and Brand -->
+        <section class="block" id="block-6" data-step="6">
           <h2>Block 6 — Design and Brand</h2>
+
           <label>Design Direction <span class="hint">Mood, references, feeling</span></label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> Describe the visual mood in plain words. Reference real products you like. Example: "Clean and minimal like Notion." This guides the agent's design choices.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> Describe the visual mood in plain words. Reference real products you like. Example: "Clean and minimal like Notion."</div>
           <textarea id="designDirection" rows="2" placeholder="Clean and minimal. Lots of whitespace..." required></textarea>
 
           <label>Brand Name</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> The name users see in the app. It can be different from the project name. Example: project name "app-builder" but brand name "AppWiz".</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> The name users see in the app. Can differ from the project name.</div>
           <input type="text" id="brandName" placeholder="RecipeAI" required />
 
           <label>Primary Color <span class="hint">Your main brand color</span></label>
-          <div style="display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
-            <button type="button" onclick="setColorMode('agent')" id="btn-agent" style="padding:8px 14px;background:#10b981;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;">🤖 Agent decides</button>
-            <button type="button" onclick="setColorMode('pick')" id="btn-pick" style="padding:8px 14px;background:#334155;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;">🎨 I'll pick</button>
+          <div class="color-mode-buttons">
+            <button type="button" id="btn-agent" data-action="color-mode" data-mode="agent">🤖 Agent decides</button>
+            <button type="button" id="btn-pick" data-action="color-mode" data-mode="pick">🎨 I'll pick</button>
           </div>
-          <div id="color-row" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
-            <div style="display:flex;gap:6px;align-items:center;">
-              <span style="font-size:.8rem;color:var(--text-secondary);">Main:</span>
-              <input type="color" id="primaryColorPicker" value="#f97316" style="width:36px;height:36px;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;" />
-              <input type="text" id="brandColorPrimary" value="#f97316" placeholder="#4f46e5" style="flex:1;min-width:120px;" />
+          <div id="color-row" class="color-row">
+            <div class="color-pair">
+              <span class="color-pair-label">Main:</span>
+              <input type="color" id="primaryColorPicker" value="#f97316" />
+              <input type="text" id="brandColorPrimary" value="#f97316" placeholder="#4f46e5" />
             </div>
-            <div style="display:flex;gap:6px;align-items:center;">
-              <span style="font-size:.8rem;color:var(--text-secondary);">Secondary:</span>
-              <input type="color" id="secondaryColorPicker" value="#fb923c" style="width:36px;height:36px;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;" />
-              <input type="text" id="brandColorSecondary" value="#fb923c" placeholder="#fb923c" style="flex:1;min-width:120px;" />
-              <label style="font-size:.78rem;color:var(--text-secondary);"><input type="checkbox" id="noSecondary" /> No secondary</label>
+            <div class="color-pair">
+              <span class="color-pair-label">Secondary:</span>
+              <input type="color" id="secondaryColorPicker" value="#fb923c" />
+              <input type="text" id="brandColorSecondary" value="#fb923c" placeholder="#fb923c" />
+              <label class="color-no-sec"><input type="checkbox" id="noSecondary" /> None</label>
             </div>
           </div>
-          <div class="extra-help"><strong>What this means:</strong> Your main brand color. Click "Random" for an automatic choice, "Agent decides" to let the agent pick, or "I'll pick" to choose with the color picker.</div>
+          <div class="extra-help"><strong>What this means:</strong> Your main brand color. "Agent decides" lets the AI pick, or choose "I'll pick" to use the color picker.</div>
         </section>
 
-        <!-- Block 7 -->
-        <section class="block" id="block-7" data-step="7" style="display:none">
+        <!-- Step 7: Constraints and Agent Behavior -->
+        <section class="block" id="block-7" data-step="7">
           <h2>Block 7 — Constraints and Agent Behavior</h2>
+
           <label>Known Constraints <span class="hint">Budget, APIs, infrastructure, or "none"</span></label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> List anything that limits your build: accounts you already have (Supabase, Vercel), budget limits, required APIs, performance targets, or technology preferences. If you don't know what applies, write "unsure — please advise" and the AI will help you decide. Example: "I already use Vercel and want to deploy there."</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> List anything that limits your build: accounts you have, budget limits, required APIs, or "none".</div>
           <textarea id="knownConstraints" rows="3" placeholder="Must use Supabase..." required></textarea>
 
           <label>Agent Autonomy</label>
-          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> AUTONOMOUS = agent makes all decisions quickly and records them. CHECKPOINTS = agent pauses for your approval at key stages (spec, core build, final QA). Choose CHECKPOINTS if you want control; AUTONOMOUS for speed.</div>
+          <div class="extra-help" style="margin-bottom:6px;"><strong>What this means:</strong> AUTONOMOUS = agent makes all decisions. CHECKPOINTS = agent pauses for your approval at key stages.</div>
           <div class="radio-group">
             <label><input type="radio" name="autonomy" value="AUTONOMOUS" checked /> Autonomous</label>
             <label><input type="radio" name="autonomy" value="CHECKPOINTS" /> Checkpoints</label>
           </div>
         </section>
 
-        <!-- Expert Mode -->
-        <section class="block" id="block-9" data-step="9" style="display:none">
+        <!-- Step 9: Expert Mode (alternate path) -->
+        <section class="block" id="block-9" data-step="9">
           <h2>Expert Mode — Raw Code & File Upload</h2>
+
           <label>Paste or edit raw code</label>
-          <textarea id="rawCode" rows="8" placeholder="Paste your script chunk or full code here for evaluation..." style="font-family:monospace;font-size:.85rem;"></textarea>
-          <div style="margin-top:10px;">
+          <textarea id="rawCode" rows="8" placeholder="Paste your script chunk or full code here..." class="code-textarea"></textarea>
+
+          <div class="expert-upload">
             <label>Attach file for evaluation</label>
-            <input type="file" id="eval-file" accept=".txt,.js,.md" onchange="loadExpertFile(this)" style="color:var(--text-secondary);font-size:.9rem;" />
-            <p id="expert-file-status" style="margin-top:6px;font-size:.78rem;color:#10b981;min-height:1.2rem;"></p>
+            <input type="file" id="eval-file" accept=".txt,.js,.md" />
+            <p id="expert-file-status" class="file-status"></p>
           </div>
-          <button type="button" id="eval-btn" onclick="loadExpertFile(document.getElementById('eval-file')); goStep(8);" class="cta-btn" style="margin-top:16px;">🔨 Evaluate & Generate</button>
+
+          <button type="button" id="eval-btn" data-action="expert-eval" class="cta-btn">🔨 Evaluate & Generate</button>
         </section>
 
-        <!-- Review -->
-        <section class="block" id="block-8" data-step="8" style="display:none">
+        <!-- Step 8: Review & Generate -->
+        <section class="block" id="block-8" data-step="8">
           <h2>Block 8 — Review & Generate</h2>
           <div id="review-summary"></div>
-          <div class="actions">
-            <button type="button" onclick="generatePrompt()" class="cta-btn">🔨 Generate Builder Prompt</button>
+          <div id="review-warnings" class="review-warnings"></div>
+          <div class="review-actions">
+            <button type="button" data-action="generate" class="cta-btn">🔨 Generate Builder Prompt</button>
+            <button type="button" id="copy-btn" data-action="copy" class="cta-btn cta-btn--success">📋 Copy to Clipboard</button>
+            <button type="button" id="legal-scan-btn" data-action="legal-scan" class="cta-btn cta-btn--warning">⚖️ Legal Scan</button>
           </div>
-          <div id="output-area" class="output-box" style="display:none;"></div>
+          <div id="output-area" class="output-box"></div>
+          <div id="legal-scan-area"></div>
         </section>
 
+        <!-- Footer Navigation -->
         <div class="wizard-footer">
-          <button type="button" onclick="prevStep()" id="btn-prev" disabled>← Back</button>
-          <span id="step-counter">Step 1 of 8</span>
-          <button type="submit" id="btn-next">Next →</button>
-          <button type="button" onclick="currentStep=0; renderStep(); document.getElementById('builder-form').reset();" style="margin-left:auto;padding:8px 14px;background:#334155;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.85rem;">↺ Restart</button>
+          <button type="button" data-action="prev" id="btn-prev">← Back</button>
+          <span id="step-counter" class="step-counter"></span>
+          <button type="button" data-action="next" id="btn-next">Next →</button>
+          <button type="button" data-action="restart" id="btn-restart">↺ Restart</button>
+          <button type="button" data-action="toggle-help" id="btn-help-toggle" class="help-toggle" title="Toggle expanded guidance">💡</button>
         </div>
+
+        <!-- Autosave indicator -->
+        <div id="autosave-indicator" class="autosave" aria-live="polite">
+          <span class="autosave-dot"></span>
+          <span class="autosave-text">Progress auto-saved</span>
+        </div>
+
       </form>
     </main>
 
@@ -240,6 +357,6 @@
 
   <script src="builder-script.js"></script>
   <script src="app.js"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a25038a96df8b16c',t:'MTc4NTcwNjYyMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
 </body>
 </html>
