@@ -43,7 +43,6 @@
     dom.btnNext       = document.getElementById('btn-next');
     dom.btnRestart    = document.getElementById('btn-restart');
     dom.btnHelpToggle = document.getElementById('btn-help-toggle');
-    dom.helpModeNote  = document.getElementById('help-mode-note');
     dom.reviewSummary = document.getElementById('review-summary');
     dom.reviewWarnings= document.getElementById('review-warnings');
     dom.outputArea    = document.getElementById('output-area');
@@ -137,7 +136,6 @@
         }
 
         // Restore help mode note
-        updateHelpModeNote();
 
         // Navigate to saved step
         state.currentStep = Math.min(data.currentStep || 0, TOTAL_STEPS - 1);
@@ -262,7 +260,6 @@
       state.isKatieMode = false;
       state.generatedPrompt = '';
       persistence.clear();
-      updateHelpModeNote();
       resetColorUI();
       resetReviewUI();
       render.renderStep();
@@ -1370,12 +1367,6 @@
     setTimeout(() => { btn.textContent = orig; }, 2000);
   }
 
-  function updateHelpModeNote() {
-    if (!dom.helpModeNote) return;
-    dom.helpModeNote.textContent = state.helpMode === 'need-help'
-      ? '✅ Expanded guidance enabled. Each step shows extra explanations and examples.'
-      : 'Brief hints shown. Click 💡 or the buttons above to enable expanded guidance.';
-  }
 
   function resetColorUI() {
     if (dom.colorRow) dom.colorRow.style.display = 'none';
@@ -1416,13 +1407,11 @@
         case 'expert-eval': expert.evaluate(); break;
         case 'toggle-help':
           state.helpMode = state.helpMode === 'need-help' ? 'got-this' : 'need-help';
-          updateHelpModeNote();
           render.renderStep();
           persistence.save();
           break;
         case 'set-mode':
           state.helpMode = actionEl.dataset.mode;
-          updateHelpModeNote();
           nav.go(1);
           break;
         case 'go-expert':
@@ -1898,7 +1887,6 @@
 
       // Set help mode to need-help since they're a newb
       state.helpMode = 'need-help';
-      updateHelpModeNote();
 
       // Trigger autosave
       debouncedSave();
@@ -1955,7 +1943,6 @@
     // Try to restore from localStorage
     const restored = persistence.load();
     if (!restored) {
-      updateHelpModeNote();
     }
 
     // Start async script loading (non-blocking)
